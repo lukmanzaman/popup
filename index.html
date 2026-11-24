@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Folded Atlas — A Pop-Up Web Story</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,800;1,9..144,500&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Subtle ambient vignette & grain -->
+  <div class="desk-backdrop" aria-hidden="true">
+    <div class="desk-glow" id="deskGlow"></div>
+    <div class="desk-grain"></div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-hud">
+    <a href="#gate" class="brand-lockup" id="brandHome" title="Return to Chapter 01">
+      <span class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 28 24" fill="none">
+          <path d="M2 5.5C6 4.2 10.5 4.8 14 7C17.5 4.8 22 4.2 26 5.5V19.5C22 18.2 17.5 18.8 14 21C10.5 18.8 6 18.2 2 19.5V5.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M14 7V21" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M5.5 9.5H10.5M5.5 13H10.5M17.5 9.5H22.5M17.5 13H22.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <span class="brand-title">The Folded Atlas</span>
+        <span class="brand-sub">A POP-UP WEB STORY</span>
+      </span>
+    </a>
+
+    <div class="top-controls">
+      <button class="hud-pill" id="btnSound" type="button" title="Toggle paper & story sound effects" aria-pressed="true">
+        <svg class="icon-sm" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M3.5 7.5H6.8L11 4V16L6.8 12.5H3.5V7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          <path class="sound-waves" d="M13.8 7.2C14.8 8.1 15.3 9 15.3 10C15.3 11 14.8 11.9 13.8 12.8M16 5C17.5 6.4 18.2 8.1 18.2 10C18.2 11.9 17.5 13.6 16 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="pill-label">Sound</span>
+      </button>
+
+      <button class="hud-pill" id="btnResetView" type="button" title="Reset 3D camera view">
+        <svg class="icon-sm" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M4.5 8.5A6 6 0 1 1 5.6 13.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M3.2 5.4V8.9H6.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Reset view</span>
+      </button>
+
+      <button class="hud-icon-btn" id="btnAutoRotate" type="button" title="Toggle gentle table orbit" aria-pressed="true">
+        <svg class="icon-sm" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="10" r="6.5" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="10" cy="10" r="2" fill="currentColor"/>
+          <path d="M10 1.8V4.2M10 15.8V18.2M1.8 10H4.2M15.8 10H18.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <button class="hud-pill hud-pill-accent" id="btnMap" type="button" title="Open Island Atlas Map">
+        <svg class="icon-sm" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M2.5 5.2L7.3 3.5L12.7 5.5L17.5 3.8V14.8L12.7 16.5L7.3 14.5L2.5 16.2V5.2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M7.3 3.5V14.5M12.7 5.5V16.5" stroke="currentColor" stroke-width="1.3"/>
+        </svg>
+        <span>Map</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Chapter Header Overlay (Upper Left) -->
+  <section class="chapter-header" id="chapterHeader" aria-live="polite">
+    <div class="chapter-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span id="chapterMeta">CHAPTER 01 / 05 &nbsp;·&nbsp; ENTRY</span>
+    </div>
+    <h1 class="chapter-title" id="chapterTitle">The Lantern Gate</h1>
+    <p class="chapter-location" id="chapterLocation">Lantern Valley</p>
+    <p class="chapter-hint" id="chapterHint">Tap the brass bell hanging in the gate.</p>
+  </section>
+
+  <!-- 3D Pop-Up Book Stage -->
+  <main class="stage-viewport" id="stageViewport">
+    <div class="book-scene" id="bookScene">
+      <div class="book-rig" id="bookRig">
+        <!-- Soft desk shadow underneath the hardcover -->
+        <div class="book-table-shadow"></div>
+
+        <!-- Hardcover Boards & Page Stacks -->
+        <div class="book-cover-board"></div>
+        <div class="book-stack book-stack-left"></div>
+        <div class="book-stack book-stack-right"></div>
+        <div class="book-spine-ribbon"></div>
+
+        <!-- Static Left Page (shows Current Spread Left) -->
+        <div class="book-half book-left-static" id="staticLeft">
+          <div class="page-surface page-surface-left" id="staticLeftSurface"></div>
+          <div class="page-gutter-shadow left-gutter"></div>
+          <div class="popup-layer" id="staticLeftPopups"></div>
+          <!-- Edge grab zone to flip backward -->
+          <div class="page-drag-edge drag-edge-left" id="dragEdgeLeft" title="Drag right to turn previous page">
+            <span class="corner-curl corner-curl-left"></span>
+          </div>
+        </div>
+
+        <!-- Static Right Page (shows Next Spread Right during turn, or Current Spread Right at rest) -->
+        <div class="book-half book-right-static" id="staticRight">
+          <div class="page-surface page-surface-right" id="staticRightSurface"></div>
+          <div class="page-gutter-shadow right-gutter"></div>
+          <div class="popup-layer" id="staticRightPopups"></div>
+          <!-- Edge grab zone to flip forward -->
+          <div class="page-drag-edge drag-edge-right" id="dragEdgeRight" title="Drag left to turn next page">
+            <span class="corner-curl corner-curl-right"></span>
+          </div>
+        </div>
+
+        <!-- Dynamic Turning Leaf (pivots from 0deg to -180deg along center spine) -->
+        <div class="turning-leaf" id="turningLeaf">
+          <!-- Front face: Outgoing Right Page -->
+          <div class="leaf-face leaf-front" id="leafFront">
+            <div class="page-surface page-surface-right" id="leafFrontSurface"></div>
+            <div class="page-gutter-shadow right-gutter"></div>
+            <div class="leaf-shade" id="leafFrontShade"></div>
+            <div class="popup-layer" id="leafFrontPopups"></div>
+          </div>
+
+          <!-- Back face: Incoming Left Page -->
+          <div class="leaf-face leaf-back" id="leafBack">
+            <div class="page-surface page-surface-left" id="leafBackSurface"></div>
+            <div class="page-gutter-shadow left-gutter"></div>
+            <div class="leaf-shade" id="leafBackShade"></div>
+            <div class="popup-layer" id="leafBackPopups"></div>
+          </div>
+        </div>
+
+        <!-- Center Spine Crease Accent -->
+        <div class="spine-crease"></div>
+      </div>
+    </div>
+
+    <!-- Subtle bottom-center gesture hint (fades out after user interacts) -->
+    <div class="gesture-toast" id="gestureToast">
+      Drag desk to rotate &nbsp;·&nbsp; Drag page corners or slider to turn
+    </div>
+  </main>
+
+  <!-- Bottom HUD: Story Narrative + Page Turn Scrubber -->
+  <footer class="bottom-hud">
+    <aside class="story-card" id="storyCard">
+      <div class="story-card-top">
+        <span class="story-eyebrow" id="storyEyebrow">PIP'S JOURNEY</span>
+        <span class="story-badge" id="storyBadge"></span>
+      </div>
+      <p class="story-copy" id="storyCopy">
+        The lighthouse is dark. Pip has until dusk to carry a signal across the island.
+      </p>
+      <div class="story-actions">
+        <button class="read-page-btn" id="btnReadPage" type="button">
+          <span>Read this page</span>
+          <svg class="icon-xs" viewBox="0 0 18 16" fill="none" aria-hidden="true">
+            <path d="M1.5 3.5C4 2.7 6.8 3.1 9 4.5C11.2 3.1 14 2.7 16.5 3.5V13C14 12.2 11.2 12.6 9 14C6.8 12.6 4 12.2 1.5 13V3.5Z" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round"/>
+            <path d="M9 4.5V14" stroke="currentColor" stroke-width="1.25"/>
+          </svg>
+        </button>
+        <div class="progress-dots" id="progressDots" aria-label="Completed chapters"></div>
+      </div>
+    </aside>
+
+    <nav class="turn-controls" aria-label="Page turn navigation">
+      <div class="turn-meta-row">
+        <span class="turn-status" id="turnStatus">PAGE TURN &nbsp;·&nbsp; TABLE ROTATES</span>
+        <span class="turn-counter" id="turnCounter">01 / 05</span>
+      </div>
+      <div class="turn-bar-row">
+        <button class="turn-arrow" id="btnPrev" type="button" aria-label="Previous chapter" title="Previous page (Left Arrow)">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M12.5 5L7.5 10L12.5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="scrubber-wrap">
+          <input
+            type="range"
+            id="pageScrubber"
+            class="page-scrubber"
+            min="0"
+            max="400"
+            value="0"
+            step="1"
+            aria-label="Turn pages smoothly across all five chapters"
+          />
+          <div class="scrubber-ticks" aria-hidden="true">
+            <span data-ch="0"></span>
+            <span data-ch="1"></span>
+            <span data-ch="2"></span>
+            <span data-ch="3"></span>
+            <span data-ch="4"></span>
+          </div>
+        </div>
+
+        <button class="turn-arrow" id="btnNext" type="button" aria-label="Next chapter" title="Next page (Right Arrow)">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </nav>
+  </footer>
+
+  <!-- Island Atlas Map Modal -->
+  <div class="modal-backdrop" id="mapModal" hidden>
+    <div class="modal-sheet map-sheet" role="dialog" aria-modal="true" aria-labelledby="mapModalTitle">
+      <header class="modal-header">
+        <div>
+          <span class="modal-kicker">CARTOGRAPHY &nbsp;·&nbsp; FIVE PLATES</span>
+          <h2 id="mapModalTitle">The Folded Island</h2>
+        </div>
+        <button class="modal-close" data-close-modal="mapModal" type="button" aria-label="Close map">&times;</button>
+      </header>
+      <div class="map-svg-container" id="mapSvgContainer"></div>
+      <div class="map-legend">
+        <span>Click any landmark pin to fold directly to its chapter plate.</span>
+        <span id="mapProgressLabel">0 / 5 signals completed</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Read This Page Story Modal -->
+  <div class="modal-backdrop" id="readerModal" hidden>
+    <div class="modal-sheet reader-sheet" role="dialog" aria-modal="true" aria-labelledby="readerModalTitle">
+      <header class="modal-header">
+        <div>
+          <span class="modal-kicker" id="readerKicker">PLATE 01 &nbsp;·&nbsp; LANTERN VALLEY</span>
+          <h2 id="readerModalTitle">The Lantern Gate</h2>
+        </div>
+        <button class="modal-close" data-close-modal="readerModal" type="button" aria-label="Close story text">&times;</button>
+      </header>
+      <div class="reader-body" id="readerBody"></div>
+      <footer class="reader-footer">
+        <span class="reader-clue" id="readerClue"></span>
+        <button class="hud-pill hud-pill-accent" data-close-modal="readerModal" type="button">Return to spread</button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="svg-art.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
